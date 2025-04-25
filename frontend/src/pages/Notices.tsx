@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import NoticeDetailsModal from "../components/notices/NoticeDetailsModal";
 import NoticesFilters from "../components/notices/NoticesFilters";
 import NoticesGrid from "../components/notices/NoticesGrid";
-import { Notice, getCategories, getNotices } from "../components/notices/noticesService";
+import { Category, Notice, getCategories, getNotices } from "../components/notices/noticesService";
 
 const Notices = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedNotice, setSelectedNotice] = useState<Notice | null>(null);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
 

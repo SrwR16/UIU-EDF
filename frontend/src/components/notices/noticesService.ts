@@ -13,15 +13,22 @@ export interface Notice {
   }[];
 }
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   slug: string;
 }
 
+export interface CategoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Category[];
+}
+
 export const getCategories = async (): Promise<Category[]> => {
   try {
-    const response = await apiGetCategories();
+    const response = (await apiGetCategories()) as CategoryResponse;
     return [{ id: "all", name: "All Notices", slug: "all" }, ...response.results];
   } catch (error) {
     console.error("Error fetching categories:", error);
