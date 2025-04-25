@@ -15,41 +15,18 @@ const NoticeDetailsModal: React.FC<NoticeDetailsModalProps> = ({ notice, onClose
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
-        className="bg-white w-full max-w-4xl overflow-hidden rounded-xl shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+        className="bg-white w-full max-w-4xl rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
       >
-        {/* Image Section - Takes full width on mobile, left sidebar on desktop */}
-        {notice.image && (
-          <div className="md:w-2/5 relative h-56 md:h-auto overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent md:bg-gradient-to-r md:from-black/40 md:via-transparent md:to-transparent" />
-            <img src={notice.image} alt={notice.title} className="w-full h-full object-cover" />
-
-            {/* Mobile Category Badge */}
-            <div className="absolute top-4 left-4 md:hidden">
-              <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-orange-500/90 text-white backdrop-blur-sm">
-                {notice.category}
-              </span>
-            </div>
-
-            {/* Go back button - mobile only */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white rounded-full p-2 md:hidden transition-all"
-            >
-              <X size={18} />
-            </button>
-          </div>
-        )}
-
         {/* Content Section */}
-        <div className={`flex-1 flex flex-col ${notice.image ? "" : "h-full"} overflow-hidden`}>
-          {/* Header with the outstanding title style from the second component */}
+        <div className="flex flex-col h-full overflow-hidden">
+          {/* Header with title */}
           <div className="flex justify-between items-center p-5 border-b border-gray-100">
             <div className="flex space-x-3 items-center">
               <div className="h-10 w-1 bg-orange-500 rounded-full"></div>
               <h2 className="font-bold text-xl text-gray-900 line-clamp-2">{notice.title}</h2>
             </div>
 
-            {/* Close button - visible on all screen sizes */}
+            {/* Close button */}
             <button
               onClick={onClose}
               className="rounded-full h-8 w-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
