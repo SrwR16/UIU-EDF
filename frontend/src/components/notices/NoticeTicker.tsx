@@ -1,12 +1,17 @@
-import React from 'react';
+import { useEffect, useState } from "react";
+import { getNotices, Notice } from "./noticesService";
 
-const NewsTicker = () => {
-  const announcements = [
-    'New workshop series starting next month',
-    'Applications open for summer internship program',
-    'Annual entrepreneurship conference registration now live',
-    'Mentorship program accepting new mentors',
-  ];
+const NoticeTicker = () => {
+  const [notices, setNotices] = useState<Notice[]>([]);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      const fetchedNotices = await getNotices();
+      setNotices(fetchedNotices.slice(0, 3));
+    };
+
+    fetchNotices();
+  }, []);
 
   return (
     <div className="bg-blue-100 py-2">
@@ -15,9 +20,9 @@ const NewsTicker = () => {
           <span className="font-semibold text-blue-900">Latest Updates:</span>
           <div className="overflow-hidden relative flex-1">
             <div className="animate-ticker whitespace-nowrap">
-              {announcements.map((announcement, index) => (
+              {notices.map((notice, index) => (
                 <span key={index} className="inline-block mx-4">
-                  {announcement}
+                  {notice.title}
                 </span>
               ))}
             </div>
@@ -28,4 +33,4 @@ const NewsTicker = () => {
   );
 };
 
-export default NewsTicker;
+export default NoticeTicker;
