@@ -1,4 +1,4 @@
-import { getCategories as apiGetCategories, getNotices as apiGetNotices } from "../../lib/api";
+import { getCategories as apiGetCategories, getNotices as apiGetNotices, getNoticesByCategory } from "../../lib/api";
 
 export interface Notice {
   id: string;
@@ -31,13 +31,13 @@ export const getCategories = async (): Promise<Category[]> => {
 
 export const getNotices = async (categoryId?: string): Promise<Notice[]> => {
   try {
-    const params: { category?: string } = {};
-    if (categoryId && categoryId !== "all") {
-      params.category = categoryId;
+    if (!categoryId || categoryId === "all") {
+      const response = await apiGetNotices();
+      return response.results || [];
+    } else {
+      const response = await getNoticesByCategory(parseInt(categoryId));
+      return response.results || [];
     }
-
-    const response = await apiGetNotices(params);
-    return response.results;
   } catch (error) {
     console.error("Error fetching notices:", error);
     return [];
