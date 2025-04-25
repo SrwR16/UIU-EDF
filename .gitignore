@@ -60,4 +60,3 @@ eslintcache
 .git/
 
 migrations/
-*.sqlite3
