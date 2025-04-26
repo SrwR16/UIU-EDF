@@ -1,36 +1,35 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const links = {
     about: [
-      { name: 'About Us', href: '#' },
-      { name: 'Leadership', href: '/leadership' },
-      { name: 'Alumni', href: '/alumni' },
-      { name: 'Careers', href: '#' },
+      { name: "About Us", href: "#" },
+      { name: "Leadership", href: "/leadership" },
+      { name: "Alumni", href: "/alumni" },
+      { name: "Careers", href: "#" },
     ],
     resources: [
-      { name: 'Events', href: '/events' },
-      { name: 'Showcase', href: '/showcase' },
-      { name: 'Blog', href: '#' },
-      { name: 'Resources', href: '#' },
+      { name: "Events", href: "/events" },
+      { name: "Showcase", href: "/showcase" },
+      { name: "Blog", href: "#" },
+      { name: "Resources", href: "#" },
     ],
     support: [
-      { name: 'Help Center', href: '#' },
-      { name: 'Contact Us', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
-      { name: 'Terms of Service', href: '#' },
+      { name: "Help Center", href: "#" },
+      { name: "Contact Us", href: "#" },
+      { name: "Privacy Policy", href: "#" },
+      { name: "Terms of Service", href: "#" },
     ],
   };
 
   const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#' },
-    { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'LinkedIn', icon: Linkedin, href: '#' },
-    { name: 'Instagram', icon: Instagram, href: '#' },
+    { name: "Facebook", icon: Facebook, href: "#" },
+    { name: "Twitter", icon: Twitter, href: "#" },
+    { name: "LinkedIn", icon: Linkedin, href: "#" },
+    { name: "Instagram", icon: Instagram, href: "#" },
   ];
 
   return (
@@ -67,10 +66,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {links.about.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-orange-500 transition-colors"
-                  >
+                  <Link to={link.href} className="text-gray-400 hover:text-orange-500 transition-colors">
                     {link.name}
                   </Link>
                 </li>
@@ -83,10 +79,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {links.resources.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-orange-500 transition-colors"
-                  >
+                  <Link to={link.href} className="text-gray-400 hover:text-orange-500 transition-colors">
                     {link.name}
                   </Link>
                 </li>
@@ -99,10 +92,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {links.support.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-gray-400 hover:text-orange-500 transition-colors"
-                  >
+                  <Link to={link.href} className="text-gray-400 hover:text-orange-500 transition-colors">
                     {link.name}
                   </Link>
                 </li>
