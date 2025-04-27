@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import EventsFilters from '../components/events/EventsFilters';
-import EventsGrid from '../components/events/EventsGrid';
-import { Event, getEventTypes, getTopics, getEvents, getEventTypeColor } from '../components/events/eventsService';
-import EventDetailsModal from '../components/events/EventDetailsModal';
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import EventDetailsModal from "../components/events/EventDetailsModal";
+import EventsFilters from "../components/events/EventsFilters";
+import EventsGrid from "../components/events/EventsGrid";
+import {
+  Event,
+  EventType, // Add this
+  getEvents,
+  getEventTypeColor,
+  getEventTypes,
+  getTopics, // Add this
+  Topic,
+} from "../components/events/eventsService";
 
 const Events = () => {
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedTopic, setSelectedTopic] = useState<string>('all');
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedTopic, setSelectedTopic] = useState<string>("all");
   const [showPastEvents, setShowPastEvents] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  const [eventTypes, setEventTypes] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [eventTypes, setEventTypes] = useState<EventType[]>([]); // Fix this type
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,21 +29,18 @@ const Events = () => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const [types, topicsList] = await Promise.all([
-          getEventTypes(),
-          getTopics()
-        ]);
-        
+        const [types, topicsList] = await Promise.all([getEventTypes(), getTopics()]);
+
         setEventTypes(types);
         setTopics(topicsList);
-        await fetchEvents('all', 'all', false);
+        await fetchEvents("all", "all", false);
       } catch (error) {
-        console.error('Error loading initial data:', error);
+        console.error("Error loading initial data:", error);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchInitialData();
   }, []);
 
@@ -46,18 +51,33 @@ const Events = () => {
   const fetchEvents = async (typeId: string, topicId: string, includePast: boolean) => {
     setLoading(true);
     try {
+      console.log(`Fetching events with: type=${typeId}, topic=${topicId}, includePast=${includePast}`);
       const data = await getEvents(typeId, topicId, includePast);
+
+      // Log what we received to verify
+      console.log(
+        `Received ${data.length} events:`,
+        data.map((e) => ({ id: e.id, title: e.title, date: e.date, status: e.status }))
+      );
+
+      if (data.length === 0) {
+        console.log(`No ${includePast ? "past" : "upcoming"} events found for the selected filters`);
+      }
+
       setEvents(data);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error("Error fetching events:", error);
+      setEvents([]); // Set to empty array, not mock data
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredEvents = events.filter(event => {
-    return event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           event.description.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredEvents = events.filter((event) => {
+    return (
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   return (
@@ -71,7 +91,8 @@ const Events = () => {
         >
           <h1 className="text-5xl font-bold text-black mb-4">Events & Workshops</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Join us for exciting workshops, seminars, and networking opportunities to enhance your entrepreneurial journey
+            Join us for exciting workshops, seminars, and networking opportunities to enhance your entrepreneurial
+            journey
           </p>
         </motion.div>
 
@@ -97,11 +118,11 @@ const Events = () => {
               setSearchQuery={setSearchQuery}
               setShowPastEvents={setShowPastEvents}
             />
-            
+
             <EventsGrid
               filteredEvents={filteredEvents}
               selectedType={selectedType}
-              timeFilter={showPastEvents ? 'all' : 'upcoming'}
+              timeFilter={showPastEvents ? "past" : "upcoming"}
               onViewDetails={setSelectedEvent}
               getEventTypeColor={getEventTypeColor}
             />

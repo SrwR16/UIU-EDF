@@ -1,3 +1,10 @@
+import {
+  getEvents as apiGetEvents,
+  getEventTopics as apiGetEventTopics,
+  getEventTypes as apiGetEventTypes,
+  getFeaturedEvents as apiGetFeaturedEvents,
+} from "../../lib/api";
+
 export interface Speaker {
   name: string;
   role: string;
@@ -25,147 +32,234 @@ export interface Event {
     name: string;
     url: string;
   }[];
-  status: 'upcoming' | 'past';
+  status: "upcoming" | "past";
+  is_featured: boolean;
 }
 
-interface EventType {
+export interface EventType {
   id: string;
   name: string;
+  slug: string;
+  color_class?: string;
 }
 
-interface Topic {
+export interface Topic {
   id: string;
   name: string;
+  slug: string;
 }
 
-// Define the base API URL - should come from environment config
-const API_BASE_URL = ''; // Adjust this when the backend is available
-
-// Get event types (mock data)
+// Get event types from API
 export const getEventTypes = async (): Promise<EventType[]> => {
-  // Mock event types list
-  return [
-    { id: 'all', name: 'All Types' },
-    { id: 'workshop', name: 'Workshops' },
-    { id: 'seminar', name: 'Seminars' },
-    { id: 'networking', name: 'Networking' },
-    { id: 'conference', name: 'Conferences' }
-  ];
-};
-
-// Get topics (mock data)
-export const getTopics = async (): Promise<Topic[]> => {
-  // Mock topics list
-  return [
-    { id: 'all', name: 'All Topics' },
-    { id: 'entrepreneurship', name: 'Entrepreneurship' },
-    { id: 'technology', name: 'Technology' },
-    { id: 'finance', name: 'Finance' },
-    { id: 'marketing', name: 'Marketing' }
-  ];
-};
-
-// Get events with optional filters (mock data or real fetch logic)
-export const getEvents = async (
-  typeId?: string,
-  topicId?: string,
-  showPast?: boolean
-): Promise<Event[]> => {
-  // Use mock data for development purposes
-  return getMockEvents();
-
-  // Here's the real fetch logic, for later when API is ready:
-  /*
   try {
-    let url = `${API_BASE_URL}/events/`;
-    const params: Record<string, string> = {};
-    
-    if (typeId && typeId !== 'all') {
-      params.type = typeId;
-    }
-    
-    if (topicId && topicId !== 'all') {
-      params.topic = topicId;
-    }
-    
-    if (typeof showPast === 'boolean') {
-      params.status = showPast ? 'all' : 'upcoming';
-    }
-    
-    const response = await fetch(url + '?' + new URLSearchParams(params));
-    if (!response.ok) {
-      throw new Error('Failed to fetch events');
-    }
-    return response.json();
+    const types = await apiGetEventTypes();
+    // Add 'All Types' option at the beginning
+    return [{ id: "all", name: "All Types", slug: "all" }, ...types];
   } catch (error) {
-    console.error('Error fetching events:', error);
+    console.error("Error fetching event types:", error);
+    // Return mock data as fallback
+    return [
+      { id: "all", name: "All Types", slug: "all" },
+      { id: "workshop", name: "Workshops", slug: "workshop" },
+      { id: "seminar", name: "Seminars", slug: "seminar" },
+      { id: "networking", name: "Networking", slug: "networking" },
+      { id: "conference", name: "Conferences", slug: "conference" },
+    ];
+  }
+};
+
+// Get topics from API
+export const getTopics = async (): Promise<Topic[]> => {
+  try {
+    const topics = await apiGetEventTopics();
+    // Add 'All Topics' option at the beginning
+    return [{ id: "all", name: "All Topics", slug: "all" }, ...topics];
+  } catch (error) {
+    console.error("Error fetching topics:", error);
+    // Return mock data as fallback
+    return [
+      { id: "all", name: "All Topics", slug: "all" },
+      { id: "entrepreneurship", name: "Entrepreneurship", slug: "entrepreneurship" },
+      { id: "technology", name: "Technology", slug: "technology" },
+      { id: "finance", name: "Finance", slug: "finance" },
+      { id: "marketing", name: "Marketing", slug: "marketing" },
+    ];
+  }
+};
+
+export const getEvents = async (typeId?: string, topicId?: string, showPast?: boolean): Promise<Event[]> => {
+  try {
+    console.log(`Fetching ${showPast ? "PAST" : "UPCOMING"} events (typeId: ${typeId}, topicId: ${topicId})`);
+
+    // Use regular endpoint with params instead of specialized endpoints
+    const params: Record<string, string> = {};
+
+    if (typeId && typeId !== "all") {
+      params.event_type__id = typeId;
+    }
+
+    if (topicId && topicId !== "all") {
+      params.topic__id = topicId;
+    }
+
+    // Add status parameter based on showPast
+    params.status = showPast ? "past" : "upcoming";
+
+    console.log("Using regular API endpoint with params:", params);
+    const response = await apiGetEvents(params);
+
+    console.log("API raw response:", response);
+
+    // Don't use mock data for empty arrays - this is likely a valid empty response
+    if (!response) {
+      console.error("API returned null or undefined");
+      return [];
+    }
+
+    // Transform response to match the Event interface
+    const eventsData = Array.isArray(response) ? response : response.results ? response.results : [];
+
+    console.log(`Transforming ${eventsData.length} events from API`);
+
+    return eventsData.map((event: any) => ({
+      id: event.id.toString(),
+      title: event.title,
+      date: event.date,
+      type: event.type || "Unknown",
+      topic: event.topic_name || "General",
+      description: event.description || "",
+      location: event.location || "TBD",
+      capacity: event.capacity || 0,
+      registrationUrl: event.registration_url || "#",
+      image: event.image || "https://placehold.co/600x400?text=No+Image",
+      duration: event.duration || "TBD",
+      speakers: event.speakers || [],
+      materials: event.materials || [],
+      status: showPast ? "past" : "upcoming", // Force correct status
+      is_featured: !!event.is_featured,
+    }));
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    // Only return mock data in case of actual errors, not empty responses
     return [];
   }
-  */
 };
 
-// Mock data for development
-export const getMockEvents = (): Event[] => {
-  return [
-    {
-      id: '1',
-      title: 'Startup Weekend 2025',
-      date: '2025-03-15',
-      type: 'conference',
-      topic: 'entrepreneurship',
-      description: "Join us for an intensive 54-hour event where you'll experience the highs, lows, fun, and pressure that make up life at a startup. You'll learn how to create a real company and meet the very best mentors, investors, cofounders, and sponsors who are ready to help you get started.",
-      location: 'Innovation Hub, Downtown Campus',
-      capacity: 150,
-      registrationUrl: '#register',
-      image: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-      duration: '54 hours',
-      status: 'upcoming',
-      speakers: [
-        {
-          name: 'Sarah Johnson',
-          role: 'Startup Mentor',
-          company: 'TechStars',
-          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-          bio: 'Sarah is a serial entrepreneur with 3 successful exits. She now mentors early-stage startups.',
-          linkedin: '#',
-          twitter: '#'
-        }
-      ]
-    },
-    {
-      id: '2',
-      title: 'Tech Innovation Summit',
-      date: '2025-04-05',
-      type: 'seminar',
-      topic: 'technology',
-      description: 'Explore the latest trends in technology and entrepreneurship with industry leaders. Learn about AI, blockchain, and other emerging technologies that are shaping the future of business.',
-      location: 'Virtual Event',
-      capacity: 300,
-      registrationUrl: '#register',
-      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
-      duration: '6 hours',
-      status: 'upcoming',
-      speakers: [
-        {
-          name: 'Dr. Emily Wong',
-          role: 'AI Research Director',
-          company: 'Tech Innovations Lab',
-          image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-          bio: 'Dr. Wong leads cutting-edge research in artificial intelligence and machine learning.',
-          linkedin: '#'
-        }
-      ]
+// Get featured events for homepage
+export const getFeaturedEvents = async (): Promise<Event[]> => {
+  try {
+    const response = await apiGetFeaturedEvents();
+    console.log("Featured events API response:", response);
+
+    // Don't use mock data for empty arrays
+    if (!response) {
+      console.error("Featured events API returned null or undefined");
+      return [];
     }
-  ];
+
+    // Transform response to match the Event interface
+    return (Array.isArray(response) ? response : []).map((event: any) => ({
+      id: event.id.toString(),
+      title: event.title,
+      date: event.date,
+      type: event.type,
+      topic: event.topic_name,
+      description: event.description,
+      location: event.location,
+      capacity: event.capacity,
+      registrationUrl: event.registration_url,
+      image: event.image,
+      duration: event.duration,
+      speakers: event.speakers || [],
+      materials: event.materials || [],
+      status: event.status,
+      is_featured: event.is_featured,
+    }));
+  } catch (error) {
+    console.error("Error fetching featured events:", error);
+    return []; // Return empty array instead of mock data
+  }
 };
 
 // Get event type color
 export const getEventTypeColor = (type: string): string => {
-  const colors = {
-    workshop: 'bg-orange-100 text-orange-800',
-    seminar: 'bg-orange-100 text-orange-800',
-    networking: 'bg-orange-100 text-orange-800',
-    conference: 'bg-orange-100 text-orange-800'
+  const colors: { [key: string]: string } = {
+    Workshop: "bg-orange-100 text-orange-800",
+    Seminar: "bg-blue-100 text-blue-800",
+    Networking: "bg-green-100 text-green-800",
+    Conference: "bg-purple-100 text-purple-800",
+    // Add lowercase versions for case insensitivity
+    workshop: "bg-orange-100 text-orange-800",
+    seminar: "bg-blue-100 text-blue-800",
+    networking: "bg-green-100 text-green-800",
+    conference: "bg-purple-100 text-purple-800",
   };
-  return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+
+  return colors[type] || "bg-gray-100 text-gray-800";
+};
+
+// Keep the mock data function for fallback
+export const getMockEvents = (): Event[] => {
+  // Existing mock data implementation
+  return [
+    {
+      id: "1",
+      title: "Startup Weekend 2025",
+      date: "2025-03-15",
+      type: "conference",
+      topic: "entrepreneurship",
+      description:
+        "Join us for an intensive 54-hour event where you'll experience the highs, lows, fun, and pressure that make up life at a startup. You'll learn how to create a real company and meet the very best mentors, investors, cofounders, and sponsors who are ready to help you get started.",
+      location: "Innovation Hub, Downtown Campus",
+      capacity: 150,
+      registrationUrl: "#register",
+      image:
+        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+      duration: "54 hours",
+      status: "upcoming",
+      is_featured: true,
+      speakers: [
+        {
+          name: "Sarah Johnson",
+          role: "Startup Mentor",
+          company: "TechStars",
+          image:
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+          bio: "Sarah is a serial entrepreneur with 3 successful exits. She now mentors early-stage startups.",
+          linkedin: "#",
+          twitter: "#",
+        },
+      ],
+      materials: [],
+    },
+    {
+      id: "2",
+      title: "Tech Innovation Summit",
+      date: "2025-04-05",
+      type: "seminar",
+      topic: "technology",
+      description:
+        "Explore the latest trends in technology and entrepreneurship with industry leaders. Learn about AI, blockchain, and other emerging technologies that are shaping the future of business.",
+      location: "Virtual Event",
+      capacity: 300,
+      registrationUrl: "#register",
+      image:
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+      duration: "6 hours",
+      status: "upcoming",
+      is_featured: true,
+      speakers: [
+        {
+          name: "Dr. Emily Wong",
+          role: "AI Research Director",
+          company: "Tech Innovations Lab",
+          image:
+            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+          bio: "Dr. Wong leads cutting-edge research in artificial intelligence and machine learning.",
+          linkedin: "#",
+        },
+      ],
+      materials: [],
+    },
+  ];
 };

@@ -36,5 +36,75 @@ export const getCategories = async () => {
     throw error;
   }
 };
+// Event-related API functions
+export const getEvents = async (params = {}) => {
+  try {
+    const response = await api.get("/events/", { params });
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const getEvent = async (id: number) => {
+  try {
+    const response = await api.get(`/events/${id}/`);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const getEventTypes = async () => {
+  try {
+    const response = await api.get("/events/types/");
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const getEventTopics = async () => {
+  try {
+    const response = await api.get("/events/topics/");
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const getFeaturedEvents = async () => {
+  try {
+    const response = await api.get("/events/featured/");
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const apiGetPastEvents = async () => {
+  try {
+    const response = await api.get("/events/past/");
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
+export const apiGetUpcomingEvents = async () => {
+  try {
+    const response = await api.get("/events/upcoming/");
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
 
 export default api;

@@ -20,13 +20,13 @@ INSTALLED_APPS = [
     "corsheaders",
     "notices",
     "django_filters",
+    "events",
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # Add this at the top
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -89,6 +89,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
 REST_FRAMEWORK = {

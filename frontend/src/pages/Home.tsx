@@ -3,11 +3,68 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, ChevronRight, Clock, MapPin, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Event, getFeaturedEvents } from "../components/events/eventsService";
 import Hero from "../components/Hero";
 import Newsletter from "../components/Newsletter";
 import NoticeTicker from "../components/notices/NoticeTicker";
 
+// Define gallery item interface
+interface GalleryItem {
+  image: string;
+  title: string;
+  description: string;
+  date: string;
+}
+
 const Home = () => {
+  // Featured events state
+  const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
+
+  // Community gallery data
+  const communityGallery: GalleryItem[] = [
+    {
+      image:
+        "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Entrepreneurship Summit",
+      description: "Annual gathering of entrepreneurs",
+      date: "March 2024",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Startup Workshop",
+      description: "Learning business fundamentals",
+      date: "January 2024",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Networking Night",
+      description: "Building connections in tech",
+      date: "February 2024",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1591115765373-5207764f72e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Pitch Competition",
+      description: "Startups competing for funding",
+      date: "April 2024",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1558403194-611308249627?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Innovation Showcase",
+      description: "Exhibiting new technologies",
+      date: "May 2024",
+    },
+    {
+      image:
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      title: "Mentor Meetup",
+      description: "Guidance from industry experts",
+      date: "June 2024",
+    },
+  ];
+
   const stats = [
     { label: "Active Members", value: "500+", icon: Users },
     { label: "Success Stories", value: "100+", icon: Trophy },
@@ -24,7 +81,7 @@ const Home = () => {
 
   // Animation effect
   useEffect(() => {
-    const targetValues = stats.map((stat) => parseInt(stat.value));
+    // Removed unused targetValues variable
     const frames = 50;
     let frame = 0;
 
@@ -35,7 +92,7 @@ const Home = () => {
       }
 
       const progress = frame / frames;
-      const newStats = stats.map((stat, index) => {
+      const newStats = stats.map((stat) => {
         const targetValue = parseInt(stat.value);
         const currentValue = Math.floor(targetValue * progress);
 
@@ -52,95 +109,19 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const featuredEvents = [
-    {
-      id: "1",
-      title: "Startup Weekend 2025",
-      date: new Date("2025-03-15"),
-      type: "conference",
-      description:
-        "Join us for an intensive 54-hour event where you'll experience the highs, lows, fun, and pressure that make up life at a startup. You'll learn how to create a real company and meet the very best mentors, investors, cofounders, and sponsors who are ready to help you get started.",
-      location: "Innovation Hub, Downtown Campus",
-      duration: "54 hours",
-      capacity: 150,
-      registrationUrl: "#register",
-      image:
-        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    },
-    {
-      id: "2",
-      title: "Tech Innovation Summit",
-      date: new Date("2025-04-05"),
-      type: "seminar",
-      description:
-        "Explore the latest trends in technology and entrepreneurship with industry leaders. Learn about AI, blockchain, and other emerging technologies that are shaping the future of business.",
-      location: "Virtual Event",
-      duration: "6 hours",
-      capacity: 300,
-      registrationUrl: "#register",
-      image:
-        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    },
-    {
-      id: "3",
-      title: "Venture Capital Workshop",
-      date: new Date("2025-04-20"),
-      type: "workshop",
-      description:
-        "Learn the ins and outs of venture capital funding. This hands-on workshop will teach you how to create a compelling pitch deck, understand term sheets, and negotiate with investors.",
-      location: "Business School, Room 401",
-      duration: "4 hours",
-      capacity: 50,
-      registrationUrl: "#register",
-      image:
-        "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    },
-  ];
+  useEffect(() => {
+    const fetchFeaturedEvents = async () => {
+      try {
+        const events = await getFeaturedEvents();
+        setFeaturedEvents(events);
+      } catch (error) {
+        console.error("Error fetching featured events:", error);
+        // Keep the static featured events as fallback
+      }
+    };
 
-  const communityGallery = [
-    {
-      image:
-        "https://images.unsplash.com/photo-1534081333815-ae5019106622?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Innovation Summit",
-      description: "Keynote session on emerging technologies.",
-      date: "January 2025",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1515165562835-c4a785ef926e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Hackathon Winners",
-      description: "Team CodeCrafters celebrating their win.",
-      date: "February 2025",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Networking Mixer",
-      description: "Members connecting at our monthly social.",
-      date: "March 2025",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1497215842964-222b430dc094?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Workshop Series",
-      description: "Learning UX design principles.",
-      date: "February 2025",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1504386106331-3e4e71712b38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Community Outreach",
-      description: "Teaching coding to local students.",
-      date: "April 2025",
-    },
-    {
-      image:
-        "https://images.unsplash.com/photo-1517430816045-df4b7de01e63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-      title: "Investor Pitch Day",
-      description: "Startups presenting to venture capitalists.",
-      date: "March 2025",
-    },
-  ];
+    fetchFeaturedEvents();
+  }, []);
 
   const getEventTypeColor = (type: string) => {
     const colors = {
@@ -190,7 +171,7 @@ const Home = () => {
             </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredEvents.map((event, index) => (
+            {featuredEvents.map((event: Event, index: number) => (
               <motion.div
                 key={event.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -211,7 +192,7 @@ const Home = () => {
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-gray-700">
                       <Calendar className="w-4 h-4 mr-2 text-orange-500" />
-                      <span>{format(event.date, "MMMM d, yyyy")}</span>
+                      <span>{format(new Date(event.date), "MMMM d, yyyy")}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
                       <Clock className="w-4 h-4 mr-2 text-orange-500" />
@@ -248,7 +229,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {communityGallery.map((item, index) => (
+            {communityGallery.map((item: GalleryItem, index: number) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
