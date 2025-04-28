@@ -213,14 +213,17 @@ const Home = () => {
                     >
                       View Details
                     </button>
-                    <a
-                      href={event.registrationUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                    >
-                      Register
-                    </a>
+                    {/* Only show Register button for upcoming events */}
+                    {event.status === "upcoming" && (
+                      <a
+                        href={event.registrationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      >
+                        Register
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.div>

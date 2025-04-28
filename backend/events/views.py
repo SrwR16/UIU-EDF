@@ -1,3 +1,4 @@
+from django.db import models
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
@@ -48,9 +49,21 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
         status = self.request.query_params.get("status", None)
 
         if status == "upcoming":
-            queryset = queryset.filter(date__gte=timezone.now())
+            # Event is upcoming if:
+            # - it has an end_date and that date is in the future, OR
+            # - it has no end_date and its start date is in the future
+            queryset = queryset.filter(
+                models.Q(end_date__gt=timezone.now())
+                | (models.Q(end_date__isnull=True) & models.Q(date__gt=timezone.now()))
+            )
         elif status == "past":
-            queryset = queryset.filter(date__lt=timezone.now())
+            # Event is past if:
+            # - it has an end_date and that date is in the past, OR
+            # - it has no end_date and its start date is in the past
+            queryset = queryset.filter(
+                models.Q(end_date__lte=timezone.now())
+                | (models.Q(end_date__isnull=True) & models.Q(date__lte=timezone.now()))
+            )
 
         return queryset
 

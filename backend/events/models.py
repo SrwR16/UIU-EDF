@@ -82,7 +82,14 @@ class Event(models.Model):
 
     @property
     def status(self):
-        if self.date > timezone.now():
+        now = timezone.now()
+        # If event has end_date, use that to determine if it's past
+        if self.end_date:
+            if self.end_date > now:
+                return "upcoming"
+            return "past"
+        # Otherwise use the start date
+        if self.date > now:
             return "upcoming"
         return "past"
 

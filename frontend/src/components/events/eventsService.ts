@@ -19,6 +19,7 @@ export interface Event {
   id: string;
   title: string;
   date: string;
+  end_date?: string | null; // Add end_date field
   type: string;
   topic: string;
   description: string;
@@ -121,23 +122,51 @@ export const getEvents = async (typeId?: string, topicId?: string, showPast?: bo
 
     console.log(`Transforming ${eventsData.length} events from API`);
 
-    return eventsData.map((event: any) => ({
-      id: event.id.toString(),
-      title: event.title,
-      date: event.date,
-      type: event.type || "Unknown",
-      topic: event.topic_name || "General",
-      description: event.description || "",
-      location: event.location || "TBD",
-      capacity: event.capacity || 0,
-      registrationUrl: event.registration_url || "#",
-      image: event.image || "https://placehold.co/600x400?text=No+Image",
-      duration: event.duration || "TBD",
-      speakers: event.speakers || [],
-      materials: event.materials || [],
-      status: showPast ? "past" : "upcoming", // Force correct status
-      is_featured: !!event.is_featured,
-    }));
+    return eventsData.map((event: any) => {
+      // Consider both start date and end date when determining if an event is past
+      const now = new Date();
+      const eventDate = new Date(event.date);
+      const endDate = event.end_date ? new Date(event.end_date) : null;
+
+      // If the backend already provided a status, use it
+      const backendStatus = event.status;
+
+      // An event is past if:
+      // - it has an end_date and that date is in the past, OR
+      // - it has no end_date and its start date is in the past
+      const isPast = endDate ? endDate < now : eventDate < now;
+
+      // Determine the final status - prioritize showPast param, then backend status, then our calculation
+      const status =
+        showPast === true
+          ? "past"
+          : showPast === false
+          ? "upcoming"
+          : backendStatus
+          ? backendStatus
+          : isPast
+          ? "past"
+          : "upcoming";
+
+      return {
+        id: event.id.toString(),
+        title: event.title,
+        date: event.date,
+        end_date: event.end_date || null,
+        type: event.type || "Unknown",
+        topic: event.topic_name || "General",
+        description: event.description || "",
+        location: event.location || "TBD",
+        capacity: event.capacity || 0,
+        registrationUrl: event.registration_url || "#",
+        image: event.image || "https://placehold.co/600x400?text=No+Image",
+        duration: event.duration || "TBD",
+        speakers: event.speakers || [],
+        materials: event.materials || [],
+        status: status, // Use the determined status
+        is_featured: !!event.is_featured,
+      };
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
     // Only return mock data in case of actual errors, not empty responses
