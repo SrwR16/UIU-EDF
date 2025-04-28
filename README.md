@@ -1,4 +1,4 @@
-# EDF-UIU Entrepreneur Development Forum
+# UIU Entrepreneur Development Forum
 
 <div align="center">
   <img src="https://scontent.fdac99-1.fna.fbcdn.net/v/t39.30808-6/426168121_770011535169682_7353493553515905860_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=W02WIwPZuYgQ7kNvwEBHOPo&_nc_oc=Adk7CarX8jf1wyJQbk75S6UmpbjBa15XYFrXpKVXlHwUU1B2AF_U11yUmRFCMeQ4umumvwJ9O7GmLxFj1j6F6a8Q&_nc_zt=23&_nc_ht=scontent.fdac99-1.fna&_nc_gid=B0SNo58HZgNXZQcCc08Sfw&oh=00_AfFZQqeHF83BQ91e_vDLfqSQ4P_Lpxr7lHh4sKVO_KKt-g&oe=68150EBC" alt="EDF-UIU Logo" width="300" />
