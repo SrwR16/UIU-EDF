@@ -120,8 +120,6 @@ Project Coordinator - coordinator@edf-uiu.edu
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" width="100%" />
 </div>
 
-Similar code found with 1 license type
-
 SrwR16: not this. give a code for best one
 
 GitHub Copilot: # Ultimate EDF-UIU Entrepreneurship Development Forum
