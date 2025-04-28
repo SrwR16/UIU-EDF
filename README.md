@@ -5,11 +5,6 @@
   <p><em>Empowering Tomorrow's Entrepreneurs Today</em></p>
 </div>
 
-![GitHub stars](https://img.shields.io/github/stars/SrwR16/UIU-EDF?style=social)
-![GitHub forks](https://img.shields.io/github/forks/SrwR16/UIU-EDF?style=social)
-![GitHub issues](https://img.shields.io/github/issues/SrwR16/UIU-EDF?style=flat-square)
-![License](https://img.shields.io/github/license/SrwR16/UIU-EDF?style=flat-square)
-
 ## 🚀 About EDF-UIU
 
 <p align="center">
@@ -35,15 +30,6 @@ EDF-UIU is a comprehensive platform for the Entrepreneurship Development Forum a
   <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
   <img src="https://img.shields.io/badge/Framer-black?style=for-the-badge&logo=framer&logoColor=blue" alt="Framer Motion" />
 </p>
-
-## 🖥️ Screenshots
-
-<div align="center">
-  <img src="https://via.placeholder.com/400x225?text=Home+Page" alt="Home Page" width="400" />
-  <img src="https://via.placeholder.com/400x225?text=Events+Page" alt="Events Page" width="400" />
-  <img src="https://via.placeholder.com/400x225?text=Notices+Page" alt="Notices Page" width="400" />
-  <img src="https://via.placeholder.com/400x225?text=Alumni+Page" alt="Alumni Page" width="400" />
-</div>
 
 ## 🚀 Getting Started
 
