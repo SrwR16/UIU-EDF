@@ -5,10 +5,10 @@
   <p><em>Empowering Tomorrow's Entrepreneurs Today</em></p>
 </div>
 
-![GitHub stars](https://img.shields.io/github/stars/username/edfv2?style=social)
-![GitHub forks](https://img.shields.io/github/forks/username/edfv2?style=social)
-![GitHub issues](https://img.shields.io/github/issues/username/edfv2?style=flat-square)
-![License](https://img.shields.io/github/license/username/edfv2?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/SrwR16/UIU-EDF?style=social)
+![GitHub forks](https://img.shields.io/github/forks/SrwR16/UIU-EDF?style=social)
+![GitHub issues](https://img.shields.io/github/issues/SrwR16/UIU-EDF?style=flat-square)
+![License](https://img.shields.io/github/license/SrwR16/UIU-EDF?style=flat-square)
 
 ## 🚀 About EDF-UIU
 
