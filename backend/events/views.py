@@ -87,7 +87,53 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
 
     @action(detail=False)
     def featured(self, request):
-        featured = self.get_queryset().filter(is_featured=True)
+        now = timezone.now()
+
+        # First try to get upcoming featured events using proper end_date logic
+        featured = (
+            self.get_queryset()
+            .filter(is_featured=True)
+            .filter(
+                models.Q(end_date__gt=now)
+                | (models.Q(end_date__isnull=True) & models.Q(date__gt=now))
+            )
+        )
+
+        # If no upcoming featured events, include recent past featured events (last 30 days)
+        if not featured.exists():
+            thirty_days_ago = now - timezone.timedelta(days=30)
+            featured = (
+                self.get_queryset()
+                .filter(is_featured=True)
+                .filter(
+                    models.Q(end_date__lte=now)
+                    | (models.Q(end_date__isnull=True) & models.Q(date__lt=now))
+                )
+                .filter(
+                    models.Q(end_date__gte=thirty_days_ago)
+                    | (
+                        models.Q(end_date__isnull=True)
+                        & models.Q(date__gte=thirty_days_ago)
+                    )
+                )
+            )
+
+        # If still no featured events, just return a few recent upcoming events
+        if not featured.exists():
+            # Get 3 most recent upcoming events regardless of featured status
+            featured = (
+                self.get_queryset()
+                .filter(
+                    models.Q(end_date__gt=now)
+                    | (models.Q(end_date__isnull=True) & models.Q(date__gt=now))
+                )
+                .order_by("date")[:3]
+            )
+
+            # If no upcoming events, get the most recent past events
+            if not featured.exists():
+                featured = self.get_queryset().order_by("-date")[:3]
+
         serializer = self.get_serializer(featured, many=True)
         return Response(serializer.data)
 
