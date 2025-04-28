@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, ChevronRight, Clock, MapPin, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import EventDetailsModal from "../components/events/EventDetailsModal";
 import { Event, getFeaturedEvents } from "../components/events/eventsService";
 import Hero from "../components/Hero";
 import Newsletter from "../components/Newsletter";
 import NoticeTicker from "../components/notices/NoticeTicker";
-
 // Define gallery item interface
 interface GalleryItem {
   image: string;
@@ -19,6 +19,8 @@ interface GalleryItem {
 const Home = () => {
   // Featured events state
   const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
+  // Selected event state for modal
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   // Community gallery data
   const communityGallery: GalleryItem[] = [
@@ -204,13 +206,21 @@ const Home = () => {
                     </div>
                   </div>
                   <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
-                  <div className="flex justify-end">
-                    <Link
-                      to={`/events/${event.id}`}
+                  <div className="flex justify-between items-center">
+                    <button
+                      onClick={() => setSelectedEvent(event)}
+                      className="text-orange-600 hover:text-orange-800 transition-colors"
+                    >
+                      View Details
+                    </button>
+                    <a
+                      href={event.registrationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
                     >
-                      Learn More
-                    </Link>
+                      Register
+                    </a>
                   </div>
                 </div>
               </motion.div>
@@ -272,6 +282,15 @@ const Home = () => {
       </div>
 
       <Newsletter />
+
+      {/* Add EventDetailsModal outside the map loop */}
+      {selectedEvent && (
+        <EventDetailsModal
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          getEventTypeColor={getEventTypeColor}
+        />
+      )}
     </main>
   );
 };
