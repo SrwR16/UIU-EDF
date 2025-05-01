@@ -1,4 +1,9 @@
-import { getCategories as apiGetCategories, getNotices as apiGetNotices, getNoticesByCategory } from "../../lib/api";
+import {
+  getCategories as apiGetCategories,
+  getNoticeById as apiGetNoticeById,
+  getNotices as apiGetNotices,
+  getNoticesByCategory,
+} from "../../lib/api";
 
 export interface Notice {
   id: string;
@@ -48,5 +53,21 @@ export const getNotices = async (categoryId?: string): Promise<Notice[]> => {
   } catch (error) {
     console.error("Error fetching notices:", error);
     return [];
+  }
+};
+
+export const getNoticeById = async (id: string): Promise<Notice> => {
+  try {
+    // Direct API call to get a specific notice by ID
+    const notice = await apiGetNoticeById(id);
+
+    if (!notice) {
+      throw new Error("Notice not found");
+    }
+
+    return notice;
+  } catch (error) {
+    console.error("Error fetching notice:", error);
+    throw error;
   }
 };

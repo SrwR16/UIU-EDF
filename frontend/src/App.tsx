@@ -1,15 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Events from './pages/Events';
-import Leadership from './pages/Leadership';
-import Membership from './pages/Membership';
-import Showcase from './pages/Showcase';
-import Alumni from './pages/Alumni';
-import Notices from './pages/Notices';
+import { AnimatePresence } from "framer-motion";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import Alumni from "./pages/Alumni";
+import Events from "./pages/Events";
+import Home from "./pages/Home";
+import Leadership from "./pages/Leadership";
+import Membership from "./pages/Membership";
+import NoticePage from "./pages/NoticePage";
+import Notices from "./pages/Notices";
+import Showcase from "./pages/Showcase";
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
             <Route path="/showcase" element={<Showcase />} />
             <Route path="/alumni" element={<Alumni />} />
             <Route path="/notices" element={<Notices />} />
+            <Route path="/notices/:id" element={<NoticePage />} />
           </Routes>
         </AnimatePresence>
         <Footer />

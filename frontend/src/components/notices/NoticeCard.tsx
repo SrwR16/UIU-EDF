@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Calendar, ChevronRight, FileText, Tag } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Import from the correct path based on your original code
 import { Notice } from "./noticesService"; // Correct the import path
@@ -113,13 +114,13 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice, index, onViewDetails })
 
             {/* Footer */}
             <div className="flex items-center justify-end mt-auto pt-3 border-t border-gray-100">
-              <button
-                onClick={() => onViewDetails(notice)}
+              <Link
+                to={`/notices/${notice.id}`}
                 className="flex items-center justify-center px-4 py-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition-colors text-sm font-medium"
               >
                 View Details
                 <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

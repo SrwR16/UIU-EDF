@@ -27,6 +27,16 @@ export const getNoticesByCategory = async (categoryId: number) => {
   }
 };
 
+export const getNoticeById = async (id: string) => {
+  try {
+    const response = await api.get(`/notices/${id}/`);
+    return response.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    throw error;
+  }
+};
+
 export const getCategories = async () => {
   try {
     const response = await api.get("/categories/");
