@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, ChevronRight, Clock, MapPin, Trophy, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import EventDetailsModal from "../components/events/EventDetailsModal";
 import { Event, getFeaturedEvents } from "../components/events/eventsService";
 import Hero from "../components/Hero";
 import Newsletter from "../components/Newsletter";
@@ -19,8 +18,6 @@ interface GalleryItem {
 const Home = () => {
   // Featured events state
   const [featuredEvents, setFeaturedEvents] = useState<Event[]>([]);
-  // Selected event state for modal
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   // Community gallery data
   const communityGallery: GalleryItem[] = [
@@ -83,7 +80,6 @@ const Home = () => {
 
   // Animation effect
   useEffect(() => {
-    // Removed unused targetValues variable
     const frames = 50;
     let frame = 0;
 
@@ -207,13 +203,13 @@ const Home = () => {
                   </div>
                   <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
                   <div className="flex justify-between items-center">
-                    <button
-                      onClick={() => setSelectedEvent(event)}
+                    <Link
+                      to={`/events/${event.id}`}
+                      state={{ from: "homepage" }}
                       className="text-orange-600 hover:text-orange-800 transition-colors"
                     >
                       View Details
-                    </button>
-                    {/* Only show Register button for upcoming events */}
+                    </Link>
                     {event.status === "upcoming" && (
                       <a
                         href={event.registrationUrl}
@@ -285,15 +281,6 @@ const Home = () => {
       </div>
 
       <Newsletter />
-
-      {/* Add EventDetailsModal outside the map loop */}
-      {selectedEvent && (
-        <EventDetailsModal
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-          getEventTypeColor={getEventTypeColor}
-        />
-      )}
     </main>
   );
 };

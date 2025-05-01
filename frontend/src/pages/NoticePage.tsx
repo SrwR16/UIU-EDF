@@ -1,14 +1,21 @@
 import { Calendar, ChevronLeft, Download, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Notice, getNoticeById } from "../components/notices/noticesService";
 import RecentNoticesPanel from "../components/notices/RecentNoticesPanel";
 
 const NoticePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [notice, setNotice] = useState<Notice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Check if user came from homepage
+  const fromHomePage = location.state?.from === "homepage";
+  // Check if this is a direct navigation (not from another notice)
+  const fromNotice = location.state?.from === "notice";
 
   useEffect(() => {
     const fetchNotice = async () => {
@@ -28,6 +35,21 @@ const NoticePage = () => {
 
     fetchNotice();
   }, [id]);
+
+  const handleGoBack = () => {
+    // If we know the user came from homepage, go there directly
+    if (fromHomePage) {
+      navigate("/");
+    }
+    // If we came from another notice or recent notices link, go to notices listing
+    else if (fromNotice) {
+      navigate("/notices");
+    }
+    // Otherwise go back in history
+    else {
+      navigate(-1);
+    }
+  };
 
   if (loading) {
     return (
@@ -62,14 +84,14 @@ const NoticePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Back button */}
-        <Link
-          to="/notices"
+        {/* Back button - updated to use our custom handler */}
+        <button
+          onClick={handleGoBack}
           className="inline-flex items-center text-orange-600 hover:text-orange-800 mb-6 transition-colors"
         >
           <ChevronLeft className="w-5 h-5 mr-1" />
-          Back to all notices
-        </Link>
+          {fromHomePage ? "Back to homepage" : "Back"}
+        </button>
 
         {/* Main notice card */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-12">

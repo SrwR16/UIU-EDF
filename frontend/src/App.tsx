@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Alumni from "./pages/Alumni";
+import EventPage from "./pages/EventPage";
 import Events from "./pages/Events";
 import Home from "./pages/Home";
 import Leadership from "./pages/Leadership";
@@ -20,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/events/:id" element={<EventPage />} />
             <Route path="/leadership" element={<Leadership />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/showcase" element={<Showcase />} />

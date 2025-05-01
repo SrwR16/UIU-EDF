@@ -52,7 +52,7 @@ const RecentNoticesPanel: React.FC<RecentNoticesPanelProps> = ({ excludeId, limi
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {notices.map((notice) => (
-        <Link key={notice.id} to={`/notices/${notice.id}`} className="block">
+        <Link key={notice.id} to={`/notices/${notice.id}`} state={{ from: "notice" }} className="block">
           <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 h-full">
             {/* Category indicator */}
             <div className="h-1 w-full bg-orange-500" />

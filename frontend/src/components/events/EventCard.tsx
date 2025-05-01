@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import React from "react";
+import { Link } from "react-router-dom";
 import { Event } from "./eventsService";
 
 interface EventCardProps {
@@ -56,9 +57,9 @@ const EventCard: React.FC<EventCardProps> = ({
         </div>
         <p className="text-gray-600 mb-4 line-clamp-3">{event.description}</p>
         <div className="flex justify-between items-center">
-          <button onClick={() => onViewDetails(event)} className="text-orange-600 hover:text-orange-800 font-medium">
-            {buttonText}
-          </button>
+          <Link to={`/events/${event.id}`} className="text-orange-600 hover:text-orange-800 font-medium">
+            View Details
+          </Link>
           {event.status !== "past" && (
             <a
               href={event.registrationUrl}

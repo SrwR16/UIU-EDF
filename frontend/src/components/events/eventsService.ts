@@ -1,4 +1,5 @@
 import {
+  getEvent as apiGetEvent,
   getEvents as apiGetEvents,
   getEventTopics as apiGetEventTopics,
   getEventTypes as apiGetEventTypes,
@@ -291,4 +292,39 @@ export const getMockEvents = (): Event[] => {
       materials: [],
     },
   ];
+};
+
+// Get event by ID
+export const getEventById = async (id: string): Promise<Event> => {
+  try {
+    // Direct API call to get a specific event by ID
+    const event = await apiGetEvent(parseInt(id));
+
+    if (!event) {
+      throw new Error("Event not found");
+    }
+
+    // Transform the event to match our interface
+    return {
+      id: event.id.toString(),
+      title: event.title,
+      date: event.date,
+      end_date: event.end_date || null,
+      type: event.event_type_name || event.type || "Unknown",
+      topic: event.topic_name || event.topic || "General",
+      description: event.description || "",
+      location: event.location || "TBD",
+      capacity: event.capacity || 0,
+      registrationUrl: event.registration_url || "#",
+      image: event.image || "https://placehold.co/600x400?text=No+Image",
+      duration: event.duration || "TBD",
+      speakers: event.speakers || [],
+      materials: event.materials || [],
+      status: event.status || (new Date(event.date) > new Date() ? "upcoming" : "past"),
+      is_featured: !!event.is_featured,
+    };
+  } catch (error) {
+    console.error("Error fetching event:", error);
+    throw error;
+  }
 };

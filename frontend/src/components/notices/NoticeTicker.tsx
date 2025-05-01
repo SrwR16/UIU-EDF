@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getNotices, Notice } from "./noticesService";
 
 const NoticeTicker = () => {
@@ -22,7 +23,13 @@ const NoticeTicker = () => {
             <div className="animate-ticker whitespace-nowrap">
               {notices.map((notice, index) => (
                 <span key={index} className="inline-block mx-4">
-                  {notice.title}
+                  <Link
+                    to={`/notices/${notice.id}`}
+                    state={{ from: "homepage" }}
+                    className="text-orange-600 hover:text-orange-800 truncate"
+                  >
+                    {notice.title}
+                  </Link>
                 </span>
               ))}
             </div>
