@@ -95,11 +95,16 @@ const NoticePage = () => {
 
         {/* Main notice card */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-12">
-          {/* Category indicator */}
-          <div className={`h-1.5 w-full bg-orange-500`} />
+          {/* Category indicator - make it thicker */}
+          <div className={`h-2 w-full bg-orange-500`} />
 
           <div className="p-6 md:p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{notice.title}</h1>
+            {/* Enhanced title styling */}
+            <div className="border-b border-orange-200 pb-4 mb-6">
+              <h1 className="text-3xl md:text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+                <span className="inline-block border-l-4 border-orange-500 pl-3">{notice.title}</span>
+              </h1>
+            </div>
 
             {/* Metadata row */}
             <div className="flex flex-wrap gap-4 mb-6 text-sm text-gray-500">
